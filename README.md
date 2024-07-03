@@ -1,36 +1,72 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Image2Record - Fleetio Parser Demo
 
-## Getting Started
+This is a demo application that uses GPT to parse images into Fleetio records. It allows users to upload images, analyze them using OpenAI's GPT-4 model, and view the analysis results.
 
-First, run the development server:
+## Prerequisites
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- Node.js (version 14 or higher)
+- npm (Node Package Manager)
+- An OpenAI API key
+- A Cloudinary account (for image uploads)
+
+## Setup
+
+1. Clone the repository:
+
+```
+   git clone <repository-url>
+   cd fleetio-parser-demo
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Install dependencies:
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+```
+   npm install
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+3. Create a `.env.local` file in the root directory and add the following environment variables:
 
-## Learn More
+```
+   OPENAI_API_KEY=your_openai_api_key
+   CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
+   CLOUDINARY_API_KEY=your_cloudinary_api_key
+   CLOUDINARY_API_SECRET=your_cloudinary_api_secret
+```
 
-To learn more about Next.js, take a look at the following resources:
+Replace the values with your actual API keys and credentials.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+4. Start the development server:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+```
+   npm run dev
+```
 
-## Deploy on Vercel
+5. Open your browser and navigate to `http://localhost:3000` to view the application.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Usage
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+1. Click the "Choose Files" button to select one or more images from your computer.
+2. Click the "Upload Images" button to upload the selected images to Cloudinary.
+3. Once the images are uploaded, click the "Analyze Images" button to process them using GPT-4.
+4. The analysis results will be displayed on the page.
+
+## Technologies Used
+
+- Next.js
+- React
+- OpenAI API
+- Cloudinary
+- Radix UI
+
+## File Structure
+
+- `app/page.js`: Main application component
+- `app/api/upload/route.js`: API route for handling image uploads
+- `app/api/analyze/route.js`: API route for analyzing images using GPT-4
+- `app/layout.js`: Root layout component
+
+## Notes
+
+- This is a demo application and may require additional error handling and optimizations for production use.
+- Ensure that your OpenAI API key has sufficient credits for using the GPT-4 model.
+- The application uses the `gpt-4o` model, which may need to be updated based on OpenAI's latest model versions.
