@@ -14,7 +14,7 @@ This is a demo application that uses GPT to parse images into Fleetio records. I
 1. Clone the repository:
 
 ```
-   git clone <repository-url>
+   git clone https://github.com/reed-jackson/fleetio-image2record
    cd fleetio-parser-demo
 ```
 
