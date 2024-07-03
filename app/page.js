@@ -1,95 +1,85 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+"use client";
+
+import { useState } from "react";
+import { Button, TextField, Flex, Text, Card, Container, Heading } from "@radix-ui/themes";
+import { useCompletion } from "ai/react";
 
 export default function Home() {
-  return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>app/page.js</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
+	const [selectedFiles, setSelectedFiles] = useState([]);
+	const [uploadedUrls, setUploadedUrls] = useState([]);
+	const [analysis, setAnalysis] = useState(null);
+	const [isLoading, setIsLoading] = useState(false);
 
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
+	const handleFileChange = (e) => {
+		if (e.target.files) {
+			setSelectedFiles(Array.from(e.target.files));
+		}
+	};
 
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
+	const uploadFiles = async () => {
+		const urls = await Promise.all(
+			selectedFiles.map(async (file) => {
+				const formData = new FormData();
+				formData.append("file", file);
+				const response = await fetch("/api/upload", {
+					method: "POST",
+					body: formData,
+				});
+				const data = await response.json();
+				return data.url;
+			})
+		);
+		setUploadedUrls(urls);
+	};
 
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
+	const handleAnalyze = async () => {
+		try {
+			const response = await fetch("/api/analyze", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({ urls: uploadedUrls }),
+			});
+			const data = await response.json();
 
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
+			console.log(data);
+			if (response.ok) {
+				setAnalysis(data.analysis);
+			} else {
+				throw new Error(data.error || "Analysis failed");
+			}
+		} catch (error) {
+			console.error("Analysis error:", error);
+			setAnalysis(`Error: ${error.message}`);
+		}
+	};
 
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  );
+	return (
+		<Container size={"2"}>
+			<Flex direction="column" align={"center"} gap="4" mt={"9"}>
+				<img
+					src="https://secure.fleetio.com/assets/fleetio-logo-horizontal-9526cfb05272263cf25e30bacc959c0e0950deabb3e2794d4009a17b751288fc.svg"
+					width={120}
+				/>
+				<Heading size="9">Image2Record</Heading>
+				<Text color="gray">A demo for GPT-parsing images into Fleetio records</Text>
+				<input type="file" multiple onChange={handleFileChange} />
+				<Button onClick={uploadFiles} disabled={selectedFiles.length === 0}>
+					Upload Images
+				</Button>
+				<Button onClick={handleAnalyze} disabled={uploadedUrls.length === 0 || isLoading}>
+					{isLoading ? "Analyzing..." : "Analyze Images"}
+				</Button>
+				{analysis && (
+					<Card>
+						<Text size="3" weight="bold">
+							Analysis Results:
+						</Text>
+						<pre>{JSON.stringify(analysis, null, 2)}</pre>
+					</Card>
+				)}
+			</Flex>
+		</Container>
+	);
 }
