@@ -1,19 +1,20 @@
 {
-  "name": "fleeti-parser-demo",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
-  },
-  "dependencies": {
-    "@tabler/icons-react": "^3.8.0",
-    "cloudinary": "^2.2.0",
-    "next": "14.2.4",
-    "openai": "^4.52.3",
-    "react": "^18",
-    "react-dom": "^18"
-  }
+	"name": "fleetio-parser-demo",
+	"version": "0.1.0",
+	"private": true,
+	"scripts": {
+		"dev": "next dev",
+		"build": "next build",
+		"start": "next start",
+		"lint": "next lint"
+	},
+	"dependencies": {
+		"@radix-ui/themes": "^3.1.1",
+		"@tabler/icons-react": "^3.8.0",
+		"cloudinary": "^2.2.0",
+		"next": "14.2.4",
+		"openai": "^4.52.3",
+		"react": "^18",
+		"react-dom": "^18"
+	}
 }
