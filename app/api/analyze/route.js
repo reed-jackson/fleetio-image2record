@@ -121,6 +121,8 @@ const recordStructures = {
 	},
 };
 
+export const maxDuration = 60; // This function can run for a maximum of 5 seconds
+
 export async function POST(request) {
 	try {
 		const { urls, recordType } = await request.json();
