@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button, Flex, Text, Card, Container, Heading, Box, SegmentedControl } from "@radix-ui/themes";
 import { IconCircleCheck, IconCircleCheckFilled, IconCircleFilled } from "@tabler/icons-react";
 
@@ -13,6 +13,9 @@ export default function Home() {
 	const [previews, setPreviews] = useState([]);
 	const [uploadError, setUploadError] = useState(null);
 	const [isUploading, setIsUploading] = useState(false);
+	const [analysisTime, setAnalysisTime] = useState(null);
+
+	const timerRef = useRef(null);
 
 	useEffect(() => {
 		// Create preview URLs for selected files
@@ -59,6 +62,12 @@ export default function Home() {
 
 	const handleAnalyze = async () => {
 		setIsLoading(true);
+		setAnalysisTime(null);
+		const startTime = Date.now();
+		timerRef.current = setInterval(() => {
+			setAnalysisTime((Date.now() - startTime) / 1000);
+		}, 100);
+
 		try {
 			const response = await fetch("/api/analyze", {
 				method: "POST",
@@ -70,7 +79,7 @@ export default function Home() {
 			const data = await response.json();
 			console.log(data);
 			if (response.ok) {
-				setAnalysis(data.analysis);
+				setAnalysis(data);
 			} else {
 				throw new Error(data.error || "Analysis failed");
 			}
@@ -79,6 +88,8 @@ export default function Home() {
 			setAnalysis(`Error: ${error.message}`);
 		} finally {
 			setIsLoading(false);
+
+			clearInterval(timerRef.current);
 		}
 	};
 
@@ -139,16 +150,19 @@ export default function Home() {
 				<Button onClick={handleAnalyze} disabled={uploadedUrls.length === 0 || isLoading}>
 					{isLoading ? "Analyzing..." : "Convert"}
 				</Button>
-				{isLoading && <Text>Processing your request...</Text>}
+				{isLoading && <Text>Processing your request... Time elapsed: {analysisTime?.toFixed(1)}s</Text>}
 				{analysis && (
 					<Card>
-						<Text size="3" weight="bold">
-							Analysis Results:
-						</Text>
-						<pre>{JSON.stringify(analysis.service_entry, null, 2)}</pre>
-						<Button color="gray" onClick={() => console.log(analysis)}>
-							Console Log Results
-						</Button>
+						<Flex direction={"column"} gap={"2"}>
+							<Text size="3" weight="bold">
+								Analysis Results:
+							</Text>
+							<Text>Analysis completed in {analysisTime?.toFixed(2)} seconds</Text>
+							<text style={{ maxWidth: "500px" }}>{JSON.stringify(analysis, null, 2)}</text>
+							<Button color="gray" onClick={() => console.log(analysis)}>
+								Console Log Results
+							</Button>
+						</Flex>
 					</Card>
 				)}
 			</Flex>
