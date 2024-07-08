@@ -90,7 +90,11 @@ export default function Home() {
 					width={120}
 				/>
 				<Heading size="9">Image2Record</Heading>
-				<Text color="gray">A demo for GPT-parsing images into Fleetio records</Text>
+				<Text color="gray">A demo for parsing invoices and receipts into Fleetio records</Text>
+				<Text color="gray">
+					Select images of invoices, reciepts, etc. to upload, then click analyze to attempt parsing them into a fleetio
+					record.
+				</Text>
 
 				<input type="file" multiple onChange={handleFileChange} />
 				<Button onClick={uploadFiles} disabled={selectedFiles.length === 0} loading={isUploading}>
