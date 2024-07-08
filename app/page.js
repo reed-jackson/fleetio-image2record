@@ -91,7 +91,7 @@ export default function Home() {
 				/>
 				<Heading size="9">Image2Record</Heading>
 				<Text color="gray">A demo for parsing invoices and receipts into Fleetio records</Text>
-				<Text color="gray">
+				<Text color="gray" align={"center"} style={{ maxWidth: "500px" }}>
 					Select images of invoices, reciepts, etc. to upload, then click analyze to attempt parsing them into a fleetio
 					record.
 				</Text>
