@@ -127,6 +127,9 @@ export async function POST(request) {
 	try {
 		const { urls, recordType } = await request.json();
 
+		console.log(urls);
+		console.log(recordType);
+
 		if (!urls || urls.length === 0 || !recordType) {
 			return NextResponse.json({ error: "Missing required parameters" }, { status: 400 });
 		}
@@ -159,6 +162,8 @@ export async function POST(request) {
 				],
 			},
 		];
+
+		console.log(messages);
 
 		const response = await openai.chat.completions.create({
 			model: "gpt-4o",
