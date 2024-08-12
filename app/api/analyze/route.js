@@ -164,6 +164,7 @@ export async function POST(request) {
 		];
 
 		console.log(messages);
+		console.log(messages[1].content[1]);
 
 		const response = await openai.chat.completions.create({
 			model: "gpt-4o",
